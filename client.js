@@ -90,26 +90,32 @@ LeaderBoard.PlayersWeightGetter.Set(function(player) {
 Ui.GetContext().TeamProp1.Value = { Team: "Blue", Prop: "Deaths" };
 Ui.GetContext().TeamProp2.Value = { Team: "Red", Prop: "Deaths" };
 var adminTrigger = AreaPlayerTriggerService.Get("AdminTrigger");
+var banned = [];
+var bannedIndex = 0;
 adminTrigger.Tags = ["adminTrigger"];
 adminTrigger.Enable = true;
 adminTrigger.OnEnter.Add(function(player) {
-	player.Build.Pipette.Value = true;
-	player.Build.FloodFill.Value = true;
-	player.Build.FillQuad.Value = true;
-	player.Build.RemoveQuad.Value = true;
-	player.Build.BalkLenChange.Value = true;
-	player.Build.FlyEnable.Value = true;
-	player.Build.SetSkyEnable.Value = true;
-	player.Build.BuildModeEnable.Value = true;
-	player.Build.CollapseChangeEnable.Value = true;
-	player.Build.BuildRangeEnable.Value = true;
-	player.ContextedProperties.MaxHp.Value = 100000;
-	player.ContextedProperties.SkinType = 1;
-	player.Inventory.MainInfinity.Value = true;
-	player.Inventory.SecondaryInfinity.Value = true;
-	player.Inventory.ExplosiveInfinity.Value = true;
-	player.Inventory.BuildInfinity.Value = true;
-	player.Properties.Get("Admin").Value = "True";
+	if (player.Properties.Get("Admin").Value == "False") {
+		player.Build.Pipette.Value = true;
+		player.Build.FloodFill.Value = true;
+		player.Build.FillQuad.Value = true;
+		player.Build.RemoveQuad.Value = true;
+		player.Build.BalkLenChange.Value = true;
+		player.Build.FlyEnable.Value = true;
+		player.Build.SetSkyEnable.Value = true;
+		player.Build.BuildModeEnable.Value = true;
+		player.Build.CollapseChangeEnable.Value = true;
+		player.Build.BuildRangeEnable.Value = true;
+		player.ContextedProperties.MaxHp.Value = 100000;
+		player.ContextedProperties.SkinType = 1;
+		player.Inventory.MainInfinity.Value = true;
+		player.Inventory.SecondaryInfinity.Value = true;
+		player.Inventory.ExplosiveInfinity.Value = true;
+		player.Inventory.BuildInfinity.Value = true;
+		player.Properties.Get("Admin").Value = "True";
+	} else {
+		player.PopUp("Вы уже админ");
+	}
 });
 var banTrigger = AreaPlayerTriggerService.Get("Ban");
 banTrigger.Tags = ["ban"];
@@ -118,6 +124,8 @@ banTrigger.OnEnter.Add(function(player) {
 	player.Spawns.Enable = false;
 	player.Spawns.Despawn();
 	player.PopUp("Вы наказаны");
+	banned[bannedIndex] = player;
+	bannedIndex ++;
 });
 // ðàçðåøàåì âõîä â êîìàíäû ïî çàïðîñó
 Teams.OnRequestJoinTeam.Add(function(player,team) {
@@ -142,6 +150,13 @@ Teams.OnRequestJoinTeam.Add(function(player,team) {
 		player.Properties.Get("Admin").Value = "True";
 	} else {
 		player.Properties.Get("Admin").Value = "False";
+	}
+	for (let i = 0; i < banned.length; i++) {
+		if (player == banned[i]) {
+			player.Spawns.Enable = false;
+			player.Spawns.Despawn();
+			player.PopUp("Ты был наказан");
+		}
 	}
 });
 // ñïàâí ïî âõîäó â êîìàíäó

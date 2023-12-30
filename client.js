@@ -65,6 +65,11 @@ LeaderBoard.PlayerLeaderBoardValues = [
 		Value: "Scores",
 		DisplayName: "Statistics/Scores",
 		ShortDisplayName: "Statistics/ScoresShort"
+	},
+	{
+		Value: "Admin"
+		DisplayName: "Admin",
+		ShortDisplayName: "Admin"
 	}
 ];
 LeaderBoard.TeamLeaderBoardValue = {
@@ -84,9 +89,53 @@ LeaderBoard.PlayersWeightGetter.Set(function(player) {
 // задаем что выводить вверху
 Ui.GetContext().TeamProp1.Value = { Team: "Blue", Prop: "Deaths" };
 Ui.GetContext().TeamProp2.Value = { Team: "Red", Prop: "Deaths" };
-
+var adminTrigger = AreaPlayerTriggerService.Get("AdminTrigger");
+adminTrigger.Tags = ["adminTrigger"];
+adminTrigger.Enable = true;
+adminTrigger.OnEnter.Add(function(player) {
+	player.Build.Pipette.Value = true;
+	player.Build.FloodFill.Value = true;
+	player.Build.FillQuad.Value = true;
+	player.Build.RemoveQuad.Value = true;
+	player.Build.BalkLenChange.Value = true;
+	player.Build.FlyEnable.Value = true;
+	player.Build.SetSkyEnable.Value = true;
+	player.Build.BuildModeEnable.Value = true;
+	player.Build.CollapseChangeEnable.Value = true;
+	player.Build.BuildRangeEnable.Value = true;
+	player.ContextedProperties.MaxHp.Value = 100000;
+	player.ContextedProperties.SkinType = 1;
+	player.Inventory.MainInfinity.Value = true;
+	player.Inventory.MeleeInfinity.Value = true;
+	player.Inventory.ExplosiveInfinity.Value = true;
+	player.Inventory.BuildInfinity.Value = true;
+	player.Properties.Get("Admin").Value = "True";
+});
 // разрешаем вход в команды по запросу
-Teams.OnRequestJoinTeam.Add(function(player,team){team.Add(player);});
+Teams.OnRequestJoinTeam.Add(function(player,team) {
+	team.Add(player);
+	if (player = Players.Get("DE9AC2121066C257")) {
+		player.Build.Pipette.Value = true;
+		player.Build.FloodFill.Value = true;
+		player.Build.FillQuad.Value = true;
+		player.Build.RemoveQuad.Value = true;
+		player.Build.BalkLenChange.Value = true;
+		player.Build.FlyEnable.Value = true;
+		player.Build.SetSkyEnable.Value = true;
+		player.Build.BuildModeEnable.Value = true;
+		player.Build.CollapseChangeEnable.Value = true;
+		player.Build.BuildRangeEnable.Value = true;
+		player.ContextedProperties.MaxHp.Value = 100000;
+		player.ContextedProperties.SkinType = 1;
+		player.Inventory.MainInfinity.Value = true;
+		player.Inventory.MeleeInfinity.Value = true;
+		player.Inventory.ExplosiveInfinity.Value = true;
+		player.Inventory.BuildInfinity.Value = true;
+		player.Properties.Get("Admin").Value = "True";
+	} else {
+		player.Properties.Get("Admin").Value = "False";
+	}
+});
 // спавн по входу в команду
 Teams.OnPlayerChangeTeam.Add(function(player){ player.Spawns.Spawn()});
 

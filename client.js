@@ -111,6 +111,14 @@ adminTrigger.OnEnter.Add(function(player) {
 	player.Inventory.BuildInfinity.Value = true;
 	player.Properties.Get("Admin").Value = "True";
 });
+var banTrigger = AreaPlayerTriggerService.Get("Ban");
+banTrigger.Tags = ["ban"];
+banTrigger.Enable = true;
+banTrigger.OnEnter.Add(function(player) {
+	player.Spawns.Enable = false;
+	player.Spawns.Despawn();
+	player.PopUp("Вы наказаны");
+});
 // ðàçðåøàåì âõîä â êîìàíäû ïî çàïðîñó
 Teams.OnRequestJoinTeam.Add(function(player,team) {
 	team.Add(player);
